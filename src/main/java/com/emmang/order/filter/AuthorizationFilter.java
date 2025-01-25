@@ -1,6 +1,8 @@
 package com.emmang.order.filter;
 
+import com.emmang.order.constant.ExceptionMessage;
 import com.emmang.order.entity.UserDetailsImpl;
+import com.emmang.order.exception.NotAuthenticatedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String role = request.getHeader("role");
         final String username = request.getHeader("username");
+
+        if (role == null || username == null) {
+            throw new NotAuthenticatedException(ExceptionMessage.HEADER_NOT_FOUND);
+        }
 
         UserDetailsImpl userDetails = new UserDetailsImpl(username, role);
 

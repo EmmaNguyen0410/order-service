@@ -23,10 +23,10 @@ public class SecurityConfiguration {
         return http.csrf()
                 .disable()
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/**").hasRole("ADMIN")
-//                        .requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/guest/**").hasAnyRole("GUEST", "ADMIN")
+                        .requestMatchers("/order/guest-access-only").hasRole("GUEST")
+                        .requestMatchers("/order/admin-access-only").hasRole("ADMIN")
+                        .requestMatchers("/order/guest-access-call-guest-access").hasRole("GUEST")
+                        .requestMatchers("/order/guest-access-call-admin-access").hasRole("GUEST")
                         .anyRequest().authenticated() // Authenticate all other requests
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
