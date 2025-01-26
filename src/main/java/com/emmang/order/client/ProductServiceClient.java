@@ -8,6 +8,7 @@ import com.emmang.order.entity.UserDetailsImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -23,19 +24,21 @@ public class ProductServiceClient {
     }
 
     public ProductResponseAdminDto fetchProductAdmin(ProductRequestDto productRequestDto) {
+        HttpEntity<ProductRequestDto> requestEntity = new HttpEntity<>(productRequestDto, getHeaders());
         return restTemplate.exchange(
                 RestEndpoint.PRODUCT_ADMIN_ACCESS_ONLY_URL,
                 HttpMethod.POST,
-                new HttpEntity<>(productRequestDto, getHeaders()),
+                requestEntity,
                 ProductResponseAdminDto.class
         ).getBody();
     }
 
     public ProductResponseGuestDto fetchProductGuest(ProductRequestDto productRequestDto) {
+        HttpEntity<ProductRequestDto> requestEntity = new HttpEntity<>(productRequestDto, getHeaders());
         return restTemplate.exchange(
                 RestEndpoint.PRODUCT_GUEST_ACCESS_ONLY_URL,
                 HttpMethod.POST,
-                new HttpEntity<>(productRequestDto, getHeaders()),
+                requestEntity,
                 ProductResponseGuestDto.class
         ).getBody();
     }
@@ -47,6 +50,7 @@ public class ProductServiceClient {
         String username = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
         httpHeaders.add("username", username);
         httpHeaders.add("role", role);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return httpHeaders;
     }
 }

@@ -20,13 +20,6 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
-//    @ExceptionHandler(UnauthorizedRoleException.class)
-//    public ResponseEntity<?> unAuthorizedRoleExceptionHandling(UnauthorizedRoleException exception) {
-//        Map<String, Object> body = new HashMap<>();
-//        body.put("message", exception.getMessage());
-//        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
-//    }
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> unAuthorizedRoleExceptionHandling(AccessDeniedException exception) {
         Map<String, Object> body = new HashMap<>();
@@ -35,7 +28,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(RestTemplateFailureException.class)
-    public ResponseEntity<?> restTemplateFailureExceptionHandling(UnauthorizedRoleException exception) {
+    public ResponseEntity<?> restTemplateFailureExceptionHandling(RestTemplateFailureException exception) {
         Map<String, Object> body = new HashMap<>();
         body.put("message", exception.getMessage());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);

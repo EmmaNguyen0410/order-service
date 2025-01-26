@@ -6,6 +6,7 @@ import com.emmang.order.dto.OrderResponseGuestDto;
 import com.emmang.order.dto.ProductRequestDto;
 import com.emmang.order.service.OrderService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,32 +20,32 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/guest-access-only")
-    public ResponseEntity<OrderResponseGuestDto> guestAccess(@RequestBody OrderRequestDto orderRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderDetailsGuest(orderRequestDto));
-    }
-
-    @PostMapping("/admin-access-only")
-    public ResponseEntity<OrderResponseAdminDto> adminAccess(@RequestBody OrderRequestDto orderRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderDetailsAdmin(orderRequestDto));
-    }
-
     @GetMapping("/any-role")
     public ResponseEntity<String> anyAccess() {
         return ResponseEntity.ok("Any access !");
     }
 
-    @PostMapping("/guest-access-call-guest-access")
-    public ResponseEntity<String> guestToGuestAccess(@RequestBody ProductRequestDto productRequestDto) {
-        String modifiedProductName = orderService.getModifiedProductName(productRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Guest access calls guest access with modified product name: " + modifiedProductName);
-    }
-
     @PostMapping("/guest-access-call-admin-access")
     public ResponseEntity<String> guestToAdminAccess(@RequestBody ProductRequestDto productRequestDto) {
-        String modifiedProductStar = orderService.getModifiedProductStar(productRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Admin access calls guest access with modified product star: " + modifiedProductStar);
+        String res = orderService.getModifiedProductName(productRequestDto);
+        return ResponseEntity.ok("Modified product name: " + res);
+    }
+
+    @PostMapping("/guest-access-call-guest-access")
+    public ResponseEntity<String> guestToGuestAccess(@RequestBody ProductRequestDto productRequestDto) {
+        String res = orderService.getModifiedProductStar(productRequestDto);
+        return ResponseEntity.ok("Modified product star: " + res);
+    }
+
+    @PostMapping("/admin-access-only")
+    public ResponseEntity<OrderResponseAdminDto> adminAccess(@RequestBody OrderRequestDto orderRequestDto) {
+        OrderResponseAdminDto orderResponseAdminDto = orderService.getOrderDetailsAdmin(orderRequestDto);
+        return ResponseEntity.ok(orderResponseAdminDto);
+    }
+
+    @PostMapping("/guest-access-only")
+    public ResponseEntity<OrderResponseGuestDto> guestAccess(@RequestBody OrderRequestDto orderRequestDto) {
+        OrderResponseGuestDto orderResponseGuestDto = orderService.getOrderDetailsGuest(orderRequestDto);
+        return ResponseEntity.ok(orderResponseGuestDto);
     }
 }
